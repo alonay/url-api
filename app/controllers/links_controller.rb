@@ -19,6 +19,10 @@ class LinksController < ApplicationController
     @link = Link.new(link_params)
     @link.short = generate_short_url
 
+    if !@link.long.start_with?("http")
+      @link.long = "http://" + @link.long
+    end
+
     if @link.save
       render json: @link, status: :created, link: @link
     else
@@ -32,8 +36,9 @@ class LinksController < ApplicationController
 
   def short
     @link = Link.find_by(short: params[:short])
-
     if @link
+      @link.visits += 1
+      @link.save
       redirect_to @link.long
     else
       redirect_to root_url
