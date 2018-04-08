@@ -7,5 +7,10 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 (1..100).each do |count|
-  Link.create(long: Faker::Internet.url, short: SecureRandom.hex(3), visits: rand(0..120))
+  link = Link.create(
+    long: Faker::Internet.url,
+    visits: rand(0..120)
+  )
+  link.short = link.id.to_s(36)
+  link.save 
 end

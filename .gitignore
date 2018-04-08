@@ -16,3 +16,4 @@ log
 !/tmp/.keep
 
 .byebug_history
+.env

@@ -17,14 +17,19 @@ class LinksController < ApplicationController
   # POST
   def create
     @link = Link.new(link_params)
-    @link.short = generate_short_url
 
     if !@link.long.start_with?("http")
       @link.long = "http://" + @link.long
     end
 
     if @link.save
-      render json: @link, status: :created, link: @link
+      @link.short = generate_short_url
+
+      if @link.save
+        render json: @link, status: :created, link: @link
+      else
+        render json: @link.errors, status: :unprocessable_entity
+      end
     else
       render json: @link.errors, status: :unprocessable_entity
     end
@@ -35,26 +40,20 @@ class LinksController < ApplicationController
   end
 
   def short
-    @link = Link.find_by(short: params[:short])
+    @link = Link.find_by(id: params[:short].to_i(36))
     if @link
       @link.visits += 1
       @link.save
       redirect_to @link.long
     else
-      redirect_to root_url
+      redirect_to ENV['CLIENT_URL']
     end
   end
 
   private
 
   def generate_short_url
-    short_url = ''
-
-    7.times do
-      short_url += CHARS.sample
-    end
-
-    short_url
+    @link.short = @link.id.to_s(36)
   end
 
   def link_params
