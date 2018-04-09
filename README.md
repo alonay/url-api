@@ -1,24 +1,18 @@
-# README
+# header
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# Setup Repository
 
-Things you may want to cover:
+- clone the repo: `$ git clone git@github.com:alonay/url-api.git`
+- cd into the directory `$ cd url-api`
+- bundle install `$ bundle`
 
-* Ruby version
+# Setup Environment Variables
+- create a file in the root directory to host your environment variables: `.env`
+- add `CLIENT_URL=http://localhost:3001` to `.env`
 
-* System dependencies
+# Setup Database
+- Run `$ rake db:setup`
 
-* Configuration
+Finally, run the server on port 3000:
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+`$ rails s -p 3000`
