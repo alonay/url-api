@@ -5,7 +5,7 @@ class LinksController < ApplicationController
 
   # GET /users
   def index
-    @links = Link.all
+    @links = Link.all.order(visits: :desc).limit(100)
     render json: @links
   end
 
