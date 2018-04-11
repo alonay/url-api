@@ -5,12 +5,13 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+require 'base62'
 
 (1..100).each do |count|
   link = Link.create(
     long: Faker::Internet.url,
     visits: rand(0..120)
   )
-  link.short = link.id.to_s(36)
-  link.save 
+  link.short = link.id.base62_encode
+  link.save
 end

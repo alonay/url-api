@@ -1,3 +1,5 @@
+require 'base62'
+
 class LinksController < ApplicationController
   arr = (0..9).to_a
   num_strings = arr.map{|number| number.to_s}
@@ -28,10 +30,14 @@ class LinksController < ApplicationController
       if @link.save
         render json: @link, status: :created, link: @link
       else
-        render json: @link.errors, status: :unprocessable_entity
+        render json: {
+          error: @link.errors
+        }, status: :unprocessable_entity
       end
     else
-      render json: @link.errors, status: :unprocessable_entity
+      render json: {
+        error: @link.errors
+      }, status: :unprocessable_entity
     end
   end
 
@@ -40,7 +46,7 @@ class LinksController < ApplicationController
   end
 
   def short
-    @link = Link.find_by(id: params[:short].to_i(36))
+    @link = Link.find_by(id: params[:short].base62_decode)
     if @link
       @link.visits += 1
       @link.save
@@ -53,7 +59,7 @@ class LinksController < ApplicationController
   private
 
   def generate_short_url
-    @link.short = @link.id.to_s(36)
+    @link.short = @link.id.base62_encode
   end
 
   def link_params
